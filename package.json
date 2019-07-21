@@ -6,7 +6,10 @@
   "dependencies": {
     "express": "^4.17.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+
+    "socket.io" : "0.8.5" 
+  },
   "scripts": {
     "start": "npm install \n node index.js"
   },
