@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+  <head>
+      <meta name="apple-music-developer-token" content="eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkhNWDQyM1YyWjUifQ.eyJpYXQiOjE1NjM1NTI5NjQsImV4cCI6MTU3OTEwNDk2NCwiaXNzIjoiUDc0ODU0N0RUNyJ9.asnDbnLBnMdQBqFaGqyCqZ3wcWZeDTKYfmPq6uCTXnOGlBIDSiujIZeRzJ5C2m404vOiNCRGuH6WuMMXcz13fQ">
+      <meta name="apple-music-app-name" content="My Cool Web App">
+      <meta name="apple-music-app-build" content="1978.4.1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    
+    <title>Socket.IO chat</title>
+
+    <script src="https://js-cdn.music.apple.com/musickit/v1/musickit.js"></script>
+
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+      #messages { margin-bottom: 40px }
+    </style>
+  </head>
+  <body>
+  
+  <label>Type (eg 'album' 'song')</label>
+  <input id="type-input" type="text" value="song">
+  <br>
+  <label>id</label>
+  <input id="id-input" type="text" value="203709340">
+  <br>
+  <button id="add-to-q-btn">Add to Queue</button>
+  <br>
+  <button id="play-btn" type="button" class="btn btn-primary" >Play</button>
+  <button id="pause-btn" type="button" class="btn btn-primary" >Pause</button>
+  <button id="login-btn"  type="button" class="btn btn-primary" >Login to Apple Music</button>
+
+    <!--   play audio on message play -->
+
+    <h1 id="id1">My Heading 1</h1>
+
+      
+      <p>Click the buttons to play or pause the audio.</p>
+      
+      <button onclick="playAudio()" type="button">Play Audio</button>
+      <button onclick="pauseAudio()" type="button">Pause Audio</button> 
+    <!--   play audio on message play ends -->
+    <ul id="messages"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+
+
+      // play audio 
+
+
+
+    //
+      /***
+        Returns a promise which resolves with a music-user-token when a user successfully authenticates and authorizes
+        https://developer.apple.com/documentation/musickitjs/musickit/musickitinstance/2992701-authorize
+      ***/
+
+        document.addEventListener('musickitloaded', function() {
+
+                // MusicKit global is now defined
+                const music = MusicKit.configure({
+                
+                  developerToken: 'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkhNWDQyM1YyWjUifQ.eyJpYXQiOjE1NjM1NTI5NjQsImV4cCI6MTU3OTEwNDk2NCwiaXNzIjoiUDc0ODU0N0RUNyJ9.asnDbnLBnMdQBqFaGqyCqZ3wcWZeDTKYfmPq6uCTXnOGlBIDSiujIZeRzJ5C2m404vOiNCRGuH6WuMMXcz13fQ',
+                
+                
+                  app: {
+                  name: 'AppleMusicKitExample',
+                  build: '1978.4.1'
+                
+                
+                }
+
+                
+              });
+
+
+          document.getElementById('login-btn').addEventListener('click', () => {
+          console.log("hello");
+          music.authorize().then(musicUserToken => {
+          console.log(`Authorized, music-user-token: ${musicUserToken}`);
+        });
+        });
+        
+        music.setQueue({
+              album: '1025210938'
+          });
+
+                document.getElementById('play-btn').addEventListener('click', () => {
+
+            music.play();
+                });
+
+          document.getElementById('pause-btn').addEventListener('click', () => {
+ 
+            music.pause();
+          });
+
+
+          // from
+          $(function () {
+        var socket = io();
+        $('form').submit(function(){
+          socket.emit('chat message', $('#m').val());
+          $('#m').val('');
+          return false;
+        });
+        socket.on('chat message', function(msg){
+          $('#messages').append($('<li>').text(msg));
+          window.scrollTo(0, document.body.scrollHeight);
+
+
+          if(msg == "play")
+          {
+            console.log("playing music");
+            let music = MusicKit.getInstance();
+            console.log(music);
+            music.play();
+            document.getElementById('id1').textContent = 'playing';
+          }
+          else{
+            if(msg == "pause")
+          {
+            let music = MusicKit.getInstance();
+            music.pause();
+            document.getElementById('id1').textContent = 'paused';
+          }  
+          }
+          
+         
+        });
+      });
+
+
+
+
+
+
+});
+
+
+
+
+
+
+
+    </script>
+  </body>
+</html>
