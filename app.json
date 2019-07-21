@@ -1,0 +1,22 @@
+{
+  "name": "MusicChat",
+  "description": "my first socket.io app",
+  "website": "https://github.com/abhatt95/MusicChat",
+  "repository": "https://github.com/abhatt95/MusicChat",
+  "logo": "https://node-js-sample.herokuapp.com/node.svg",
+  "success_url": "/",
+  "keywords": [
+    "node",
+    "express",
+    "socket.io",
+    "realtime",
+    "websocket"
+  ],
+  "scripts": {
+  },
+  "addons": [
+  ],
+  "env": {
+    "BUILDPACK_URL": "https://github.com/heroku/heroku-buildpack-nodejs"
+  }
+}
