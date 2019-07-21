@@ -8,7 +8,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "npm install && node index.js"
+    "start": "npm install \n node index.js"
   },
   "repository": {
     "type": "git",
