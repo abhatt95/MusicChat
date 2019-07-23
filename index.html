@@ -25,14 +25,10 @@
     </style>
   </head>
   <body>
-  
-  <label>Type (eg 'album' 'song')</label>
-  <input id="type-input" type="text" value="song">
+    <br>
+    <br>
+  <input type="text" placeholder="Search.." id="searchBox">
   <br>
-  <label>id</label>
-  <input id="id-input" type="text" value="203709340">
-  <br>
-  <button id="add-to-q-btn">Add to Queue</button>
   <br>
   <button id="play-btn" type="button" class="btn btn-primary" >Play</button>
   <button id="pause-btn" type="button" class="btn btn-primary" >Pause</button>
@@ -44,9 +40,15 @@
 
       
       <p>Click the buttons to play or pause the audio.</p>
+      <fieldset id="buildyourform">
+
+      <table id="myTable" style="border: 1px solid black">
+</table>
+</fieldset> 
+<table id="myQueue" style="border: 1px solid black">
+</table>
+
       
-      <button onclick="playAudio()" type="button">Play Audio</button>
-      <button onclick="pauseAudio()" type="button">Pause Audio</button> 
     <!--   play audio on message play ends -->
     <ul id="messages"></ul>
     <form action="">
@@ -94,7 +96,7 @@
         });
         
         music.setQueue({
-              album: '1025210938'
+              song: '1122773680' 
           });
 
                 document.getElementById('play-btn').addEventListener('click', () => {
@@ -107,6 +109,34 @@
             music.pause();
           });
 
+          document.getElementById("searchBox").onkeypress = function(event){
+                //if (event.keyCode == 13 || event.which == 13){
+
+                  music.api.search(document.getElementById("searchBox").value, {
+                                limit: 5, 
+                                types: 'songs'
+                              })
+                              .then(data => {
+                                    console.log("received");
+                                    console.log(data['songs']['data']);
+                                    var temp = data['songs']['data'] ; 
+                                    $("#myTable tr").remove();
+                                for(var i in temp)
+                                {
+                                console.log(i,temp[i]['id'],temp[i]['attributes']['name']);
+                                $('#myTable').append('<tr><td>'+temp[i]['attributes']['name']+'</td><td><input type="button" value="'+temp[i]['id']+'" id= "add"/></td></tr>');
+
+                                }
+                                
+                              })
+                              .catch(console.error)
+                                        
+                                    };
+                                    
+          $("#buildyourform").on('click', '#add', function () {
+            console.log("adding");
+            $('#myQueue').append('<tr><td>'+this.value+'</td><td><input type="button" value="Add" id= "addSong"/></td></tr>');
+          });
 
           // from
           $(function () {
@@ -148,13 +178,6 @@
 
 
 });
-
-
-
-
-
-
-
     </script>
   </body>
 </html>
